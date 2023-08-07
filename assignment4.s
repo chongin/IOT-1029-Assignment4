@@ -5,7 +5,7 @@
 .equ cmark, 50
 
 _start:
-    MOV R5, #95    // The assignment grade (you can change this value for testing)
+    MOV R5, #75    // The assignment grade (you can change this value for testing)
 
     LDR R6, =amark // Load the value at the memory address 'amark' into R6
     LDR R7, =bmark // Load the value at the memory address 'bmark' into R7
@@ -19,8 +19,7 @@ _start:
 
     CMP R5, R8 // compare input grade and c grade
     BGE print_c_grade // handle input grade is greater or equal than c grade
-
-    B print_f_grade // input grade is less than c grade
+    BLT print_f_grade // input grade is less than c grade
 
 print_a_grade:
     LDR R1, =amessage  // Load the value at memory address '=amessage' into R1
@@ -44,29 +43,30 @@ print_f_grade:
 
 print_message:
     MOV R7, #4 // syscall to call write function
+    MOV R0, #1 //print to stdout
     SWI 0 // execute the interrupt to invoke the write function
 
 end:
     MOV R7, #1 // syscall to terminate the current process, exit call
+    MOV R0, #0 // no error
     SWI 0 // return status code 0
 
 .data
+
 amessage:
     .asciz "Congratulations, you got an A.\n"  // define constant amessage string value
+alen = .-amessage // calculate the length value of amessage
+
 bmessage:
     .asciz "Good job! You got a B.\n" // define constant bmessage string value
+blen = .-bmessage // calculate the length value of bmessage
+
 cmessage:
     .asciz "Not bad, you got a C.\n" // define constant cmessage string value
+clen = .-cmessage // calculate the length value of cmessage
+
 fmessage:
     .asciz "Sorry, you got an F.\n" // define constant fmessage string value
-
-alen = .-amessage // calculate the length value of amessage
-blen = .-bmessage // calculate the length value of bmessage
-clen = .-cmessage // calculate the length value of cmessage
 flen = .-fmessage // calculate the length value of fmessage
 
-
-// my output is not correct, it output all the message when I R5 value is bigger than 95, it looks like don't know how to exit the problem.
-// I don't why now.
-// excute comman: qemu-arm ./a.out
 
